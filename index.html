@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Red Panda Gallery</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: #0b0c10;
+        color: #e8e8e8;
+      }
+      header {
+        padding: 32px 24px 8px;
+        text-align: center;
+      }
+      header h1 {
+        margin: 0 0 8px;
+        font-size: clamp(24px, 3vw, 36px);
+        font-weight: 600;
+      }
+      header p {
+        margin: 0;
+        opacity: 0.7;
+      }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+        padding: 24px;
+        max-width: 1200px;
+        margin: 0 auto 48px;
+      }
+      .card {
+        position: relative;
+        display: block;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #111318;
+        transform: translateZ(0);
+        transition: transform 200ms ease, box-shadow 200ms ease;
+        will-change: transform;
+      }
+      .card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+        transition: transform 200ms ease;
+      }
+      .card:hover {
+        transform: scale(1.06);
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+        z-index: 2;
+      }
+      .card:hover img {
+        transform: scale(1.02);
+      }
+      .meta {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        padding: 4px 8px;
+        font-size: 12px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(6px);
+      }
+      @media (min-width: 900px) {
+        .card img {
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Red Panda Gallery</h1>
+      <p>Top posts with #レッサーパンダ (last 30 days)</p>
+    </header>
+    <main class="gallery" id="gallery" aria-live="polite"></main>
+    <script>
+      const items = [
+        {
+          tweetUrl: "https://x.com/panpanda145/status/2010306022209126872",
+          imageUrl: "https://pbs.twimg.com/media/G-YKqkHbQAAV0SJ?format=jpg&name=small",
+          likeText: "1.6K",
+        },
+        {
+          tweetUrl: "https://x.com/yucchin1125/status/2010337317966454897",
+          imageUrl: "https://pbs.twimg.com/media/G-YnItiaAAAYgV0?format=jpg&name=small",
+          likeText: "628",
+        },
+        {
+          tweetUrl: "https://x.com/m_phoenixzoo/status/2007748735821070612",
+          imageUrl: "https://pbs.twimg.com/media/G9z008Na4AA6Mun?format=jpg&name=360x360",
+          likeText: "616",
+        },
+        {
+          tweetUrl: "https://x.com/m_phoenixzoo/status/2007748735821070612",
+          imageUrl: "https://pbs.twimg.com/media/G9z01CKagAAAF9H?format=jpg&name=small",
+          likeText: "616",
+        },
+        {
+          tweetUrl: "https://x.com/mochatake105/status/2007367042433990936",
+          imageUrl: "https://pbs.twimg.com/media/G9uZr9SbEAEcz-D?format=jpg&name=small",
+          likeText: "573",
+        },
+        {
+          tweetUrl: "https://x.com/vegi_ta59/status/2008156409805111678",
+          imageUrl: "https://pbs.twimg.com/media/G95nnMmbsAAcWcm?format=jpg&name=small",
+          likeText: "493",
+        },
+        {
+          tweetUrl: "https://x.com/2xWaxMdnv3D9qns/status/2003644349142434144",
+          imageUrl: "https://pbs.twimg.com/media/G85f6bXboAAjI_2?format=jpg&name=small",
+          likeText: "413",
+        },
+        {
+          tweetUrl: "https://x.com/toyokawa_sanpo/status/2009398542620848485",
+          imageUrl: "https://pbs.twimg.com/media/G-LQTQabcAAVf4u?format=jpg&name=small",
+          likeText: "395",
+        },
+        {
+          tweetUrl: "https://x.com/yucchin1125/status/2010688740918726988",
+          imageUrl: "https://pbs.twimg.com/media/G-dmwQdaYAAfZAQ?format=jpg&name=small",
+          likeText: "390",
+        },
+        {
+          tweetUrl: "https://x.com/Canon_0331/status/2009181696290353257",
+          imageUrl: "https://pbs.twimg.com/media/G-IMGG7a0AQ2B6h?format=jpg&name=small",
+          likeText: "373",
+        },
+        {
+          tweetUrl: "https://x.com/2xWaxMdnv3D9qns/status/2001290629041868818",
+          imageUrl: "https://pbs.twimg.com/media/G8YDMT3a4AEzHfi?format=jpg&name=small",
+          likeText: "365",
+        },
+        {
+          tweetUrl: "https://x.com/hitamu0223/status/2009200409358012803",
+          imageUrl: "https://pbs.twimg.com/media/G-IdHeea0AcAHn2?format=jpg&name=360x360",
+          likeText: "355",
+        },
+        {
+          tweetUrl: "https://x.com/hitamu0223/status/2009200409358012803",
+          imageUrl: "https://pbs.twimg.com/media/G-IdHehb0AAfKLp?format=jpg&name=360x360",
+          likeText: "355",
+        },
+        {
+          tweetUrl: "https://x.com/hitamu0223/status/2009200409358012803",
+          imageUrl: "https://pbs.twimg.com/media/G-IdHeha0AIWzK9?format=jpg&name=360x360",
+          likeText: "355",
+        },
+        {
+          tweetUrl: "https://x.com/hitamu0223/status/2009200409358012803",
+          imageUrl: "https://pbs.twimg.com/media/G-IdHeha0AE_MFr?format=jpg&name=360x360",
+          likeText: "355",
+        },
+        {
+          tweetUrl: "https://x.com/IVlql3gcA97VMEf/status/2010512540481306979",
+          imageUrl: "https://pbs.twimg.com/media/G-bGfsca0AACYpZ?format=jpg&name=small",
+          likeText: "344",
+        },
+        {
+          tweetUrl: "https://x.com/mugimugiitoton/status/2006584108437344612",
+          imageUrl: "https://pbs.twimg.com/media/G9jRnF2bkAAQOhr?format=jpg&name=small",
+          likeText: "284",
+        },
+        {
+          tweetUrl: "https://x.com/onyankopon_fc/status/2009239187061715244",
+          imageUrl: "https://pbs.twimg.com/media/G-JAY0Fa0AAXEYt?format=jpg&name=small",
+          likeText: "281",
+        },
+        {
+          tweetUrl: "https://x.com/onyankopon_fc/status/2009239187061715244",
+          imageUrl: "https://pbs.twimg.com/media/G-JAY0Aa0AEtVN9?format=jpg&name=small",
+          likeText: "281",
+        },
+        {
+          tweetUrl: "https://x.com/animal_love_US/status/2009150537313472876",
+          imageUrl: "https://pbs.twimg.com/media/G-HvwNHa0AAPq2d?format=jpg&name=small",
+          likeText: "280",
+        },
+        {
+          tweetUrl: "https://x.com/animal_love_US/status/2009150537313472876",
+          imageUrl: "https://pbs.twimg.com/media/G-Hvw2Ga0AIN7TH?format=jpg&name=small",
+          likeText: "280",
+        },
+        {
+          tweetUrl: "https://x.com/yucchin1125/status/2008876103516164507",
+          imageUrl: "https://pbs.twimg.com/media/G-D2K3Oa4AEsfKf?format=jpg&name=small",
+          likeText: "274",
+        },
+        {
+          tweetUrl: "https://x.com/ten___0919/status/2006128064179085653",
+          imageUrl: "https://pbs.twimg.com/media/G9cy15ZaYAIOn5t?format=jpg&name=small",
+          likeText: "267",
+        },
+        {
+          tweetUrl: "https://x.com/775xanimalsx775/status/2008872638228402640",
+          imageUrl: "https://pbs.twimg.com/media/G-DzBDUakAEC7ms?format=jpg&name=small",
+          likeText: "259",
+        },
+        {
+          tweetUrl: "https://x.com/uqrXoGGUbAcWQyk/status/2007022131289444852",
+          imageUrl: "https://pbs.twimg.com/media/G9pf_XzacAApYdn?format=jpg&name=small",
+          likeText: "239",
+        },
+        {
+          tweetUrl: "https://x.com/lovemama0303/status/2009109774290600231",
+          imageUrl: "https://pbs.twimg.com/media/G-HKklBbMAE2Z9k?format=jpg&name=small",
+          likeText: "233",
+        },
+        {
+          tweetUrl: "https://x.com/lovemama0303/status/2009109774290600231",
+          imageUrl: "https://pbs.twimg.com/media/G-HKklEaMAA-idZ?format=jpg&name=360x360",
+          likeText: "233",
+        },
+        {
+          tweetUrl: "https://x.com/lovemama0303/status/2009109774290600231",
+          imageUrl: "https://pbs.twimg.com/media/G-HKklJawAAZICC?format=jpg&name=360x360",
+          likeText: "233",
+        },
+        {
+          tweetUrl: "https://x.com/yokoyoyo_koyo25/status/2002155119685873715",
+          imageUrl: "https://pbs.twimg.com/media/G8kVd59aEAA9A5N?format=jpg&name=small",
+          likeText: "231",
+        },
+        {
+          tweetUrl: "https://x.com/mg7rf_wym/status/2002350955405476207",
+          imageUrl: "https://pbs.twimg.com/media/G8nHlSKaMAAwwaG?format=jpg&name=small",
+          likeText: "231",
+        },
+      ];
+
+      const gallery = document.getElementById("gallery");
+      gallery.innerHTML = items
+        .map((item, index) => {
+          const src = item.imageUrl
+            .replace("name=small", "name=large")
+            .replace("name=360x360", "name=large");
+          return `
+          <a class="card" href="${item.tweetUrl}" target="_blank" rel="noopener noreferrer" aria-label="Open tweet ${index + 1}">
+            <img src="${src}" alt="Red panda photo ${index + 1}" loading="lazy" />
+            <span class="meta">${item.likeText} likes</span>
+          </a>
+        `;
+        })
+        .join("");
+    </script>
+  </body>
+</html>
